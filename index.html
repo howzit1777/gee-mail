@@ -1,18 +1,66 @@
 <html>
 	<head>
+	  <title>GeeMail - Not your mother's email!</title>
 		<script src="js/mail-generator.js"></script>
+		<script src="js/jquery.min.js"></script>
 		<link href="css/style.css" rel="stylesheet" media="screen">
+	<link rel="shortcut icon" type="image/x-icon" href="images/email.png">
+	<meta name="keywords" content="mail, email, GeeMail, gmail, message, messages, letters, notes"/>
+	<meta name="description" content="Bootcamp GeeMail Assignment"/>
+	
+
     <script>
       window.onload = function(){
         // ALL OF YOUR JAVASCRIPT CODE SHOULD GO HERE. 
         // We have to use window.onload so your JavaScript doesn't execute until the page has loaded and all HTML has been downloaded to your browser
-        
+	// Store additional variables
+	var i = 0;
+
+	// Clickable row to display message
+	$(document).on("click", ".content" ,function(){ 
+	var id = $(this).data('id');
+	$(this).attr("class", "content read")
+	$('#display').html('<span id="close">[X]</span>From: '+geemails[id].sender+'<br><br>Date: '+geemails[id].date+'<br><br>Subject: '+geemails[id].subject+'<br><br>Message: '+geemails[id].body).show();
+	});
+
+	$(document).on("click", "#close", function(){ $(this).parent().hide(); });
+
+
+	// Load GeeMail Array into inbox display
+        $.each(geemails, function(i, email){ window.i = i+1;
+	$('#content').append('<tr class="content" data-id="'+i+'"><td>'+email.subject+'</td><td>'+email.sender+'</td><td>'+email.date+'</td></tr>');
+	});
+
+	// Display inbox count aka geemails.length 	
+        $('#inboxCnt').html(geemails.length);
+
+	// Load new messages with the set interval
+	setInterval(function(){ 
+	i = window.i++;
+	var email = getNewMessage();
+	geemails.push(email); 
+
+	/* Update inbox count */
+        $('#inboxCnt').html(geemails.length);
+
+	var displayReverse = $('#content').html();
+	$('#content').html('<tr class="content" data-id="'+i+'"><td>'+email.subject+'</td><td>'+email.sender+'</td><td>'+email.date+'</td></tr>'+displayReverse); 
+	}, 5000);
       };
     </script>
 	</head>
 	<body>
 		<div class="container" id="main">
-			Build Me!
+			<div id="logo">Logo here</div>
+			<div id="nav">Messages in Inbox: <span id="inboxCnt"></span></div>
+			<div id="emails">
+				<table>
+				<th>Subject</th><th>Sender</th><th>Date</th>
+				<tr><td colspan=3><div id="content"></div></td></tr>
+				</table>
+			</div>
+			<div id="display"></div>
+			<div id="footer">footer here</div>
 		</div>
 	</body>
 </html>
